@@ -7,6 +7,8 @@ This tool is designed to explore the analytic structure of complex functions —
 
 ---
 
+## Motivation
+
 Complex functions are often difficult to reason about from formulas alone.
 By mapping function values to color and intensity, this project provides
 an intuitive way to:
