@@ -85,6 +85,8 @@ $$f(z) = \frac{z}{\cos(z)}$$
 <img src="/images/Cosine_plot.png" alt="Plot2" width="400" height="300">
   
 ### 3. Riemann Zeta function
+
+$$\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s}$$
   
 <img src="/images/Riemann_plot.png" alt="Plot3" width="400" height="300">
 
