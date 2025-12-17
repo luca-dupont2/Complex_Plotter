@@ -14,7 +14,7 @@ cd Complex_Plotter
   ```console
   cargo run --release
   ```
-* Or create an application bundle which you'll find in `target/release/` by running :
+* Or create an application bundle which you'll find in `target/release/bundle/` by running :
   ```console
   cargo bundle --release
   ```
