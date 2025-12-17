@@ -15,5 +15,5 @@ rayon = "1.10.0"
 
 [package.metadata.bundle]
 name = "Complex Plotter"
-icon = ["517x517.jpg"]
+icon = ["images/517x517.jpg"]
 identifier = "com.luca.complexplotter"
