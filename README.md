@@ -74,7 +74,7 @@ flexibility.
 
 ### 1. Rational function
 
-$$f(z) = (z^3 - 100) / (z^2 + 40)$$
+$$f(z) = \frac{z^3 - 100}{z^2 + 40}$$
 
 <img src="/images/Cube_plot.png" alt="Plot1" width="400" height="300">
   
