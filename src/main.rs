@@ -2,7 +2,8 @@
 use macroquad::{color::hsl_to_rgb, miniquad::window::screen_size, prelude::*};
 use num_complex::Complex;
 use std::f32::consts::PI;
-use rayon::prelude::*;
+mod cache;
+use cache::{Cache, View};
 
 // ! Change function at line 30
 
@@ -72,6 +73,7 @@ async fn main() {
 
     let mut image = Image::gen_image_color(width as u16, height as u16, WHITE);
     let mut texture = Texture2D::from_image(&image);
+    let mut cache = Cache::new();
 
     let (mut w, mut h) = (image.width(), image.height());
 
@@ -85,7 +87,7 @@ async fn main() {
     loop {
         // Check for window resizing
         let (new_width, new_height) = screen_size();
-        if new_width != width || new_height != height {
+        if new_width as usize != image.width() || new_height as usize != image.height() {
             image = Image::gen_image_color(new_width as u16, new_height as u16, WHITE);
             texture = Texture2D::from_image(&image);
 
@@ -120,27 +122,13 @@ async fn main() {
             y_offset -= boundary / SCROLL_FACTOR;
         }
 
-        // Make a vector of the pixel point pairs
-        let x_y_vec : Vec<(u32, u32)> = (0..w as u32)
-            .flat_map(|x| (0..h as u32).map(move |y| (x, y)))
-            .collect();
-
-        // Map the pairs to the complex plane, them compute the result of the complex function with threads then map it to a color
-        let colors: Vec<Color> = x_y_vec.clone()
-            .into_par_iter() // Transform to parallel iterator
-            .map(|(x,y)| Complex::new(map_value(x as f32, 0., w as f32, (-boundary) + x_offset, boundary + x_offset, ),map_value(y as f32, 0., h as f32, boundary - y_offset, -boundary - y_offset, ))) // Map to complex plane
-            .map(f) // Compute f(z) (result)
-            .map(val_to_color)// Compute the color of each point
-            .collect();
-
-        // Loop through each point and color it
-        for ((x,y),color) in x_y_vec.into_iter().zip(colors.into_iter()) {
-            // Set according color
-            image.set_pixel(x, y, color);
+        let view = View { width: w, height: h, boundary: boundary as f64, x: x_offset as f64, y: y_offset as f64 };
+        if cache.update(view, |x, y| f(Complex::new(x as f32, y as f32))) {
+            for (index, value) in cache.values().enumerate() {
+                image.set_pixel((index % w) as u32, (index / w) as u32, val_to_color(value));
+            }
+            texture.update(&image);
         }
-
-        // Draw result on screen
-        texture.update(&image);
 
         draw_texture(&texture, 0., 0., WHITE);
 
