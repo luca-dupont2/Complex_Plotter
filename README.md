@@ -38,12 +38,17 @@ cd Complex_Plotter
 ---
 
 ## Usage :
-* Install Rust and Cargo (see [requirements](#Requirements))
-* Run the applcation:
+* Install Rust and Cargo (see [requirements](#requirements))
+* Run the application:
   ```console
-  cargo run --release
+  cargo run --release --locked
   ```
-Optionally, generate a standalone application bundle:
+To generate a standalone application bundle, install the optional
+[`cargo-bundle` command](https://github.com/burtonageo/cargo-bundle) separately:
+  ```console
+  cargo install cargo-bundle --locked
+  ```
+Then generate the bundle:
   ```console
   cargo bundle --release
   ```
@@ -94,13 +99,27 @@ $$\zeta(s) = \sum_{n=1}^{\infty}\frac{1}{n^s}$$
 
 ## Requirements
 
-- Rust / Cargo
+- Current stable Rust and Cargo
 
 Install via:
   ```console
   curl https://sh.rustup.rs -sSf | sh
   ```
 (Windows users: download [rustup-init.exe](https://win.rustup.rs/) from the official Rust website.) 
+
+If Rust is already installed through rustup, update it before building:
+
+```console
+rustup update stable
+```
+
+If Cargo reports that `feature edition2024 is required`, the active Cargo
+version cannot parse a dependency's Rust 2024 manifest. Update Rust, then check
+`cargo --version` in the terminal you use to run the project. Rust 2024 support
+starts with Rust 1.85, but newer dependencies can require a newer compiler.
+
+`cargo-bundle` is an optional packaging tool. Keep it out of `[dependencies]`
+so `cargo run` does not resolve its packaging dependencies, including `time-core`.
 
 ---
 
