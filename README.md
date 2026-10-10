@@ -121,6 +121,18 @@ starts with Rust 1.85, but newer dependencies can require a newer compiler.
 `cargo-bundle` is an optional packaging tool. Keep it out of `[dependencies]`
 so `cargo run` does not resolve its packaging dependencies, including `time-core`.
 
+The committed `Cargo.lock` uses `macroquad` 0.4.14 and `fontdue` 0.9.3 for
+compatibility with Rust 1.84.1.
+Keep `--locked` when building to preserve these dependency versions.
+`fontdue` 0.9.4 uses [`cast_signed`](https://doc.rust-lang.org/std/primitive.u8.html#method.cast_signed),
+which requires Rust 1.87 or later. On older Rust versions, it reports
+`use of unstable library feature integer_sign_cast`.
+
+If you update Rust but still see this error, check `which rustc` and
+`rustc --version`. A Homebrew installation can take priority over rustup in
+`PATH`. Update that installation or put `$HOME/.cargo/bin` before the Homebrew
+directory in `PATH`.
+
 ---
 
 ## Technical Notes

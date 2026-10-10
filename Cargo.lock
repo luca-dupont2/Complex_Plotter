@@ -60,15 +60,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "core_maths"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77745e017f5edba1a9c1d854f6f3a52dac8a12dd5af5d2f54aecf61e43d80d30"
-dependencies = [
- "libm",
-]
-
-[[package]]
 name = "crc32fast"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -141,9 +132,9 @@ checksum = "d9c4f5dac5e15c24eb999c26181a6ca40b39fe946cbe4c263c7209467bc83af2"
 
 [[package]]
 name = "fontdue"
-version = "0.9.4"
+version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7894823fa221401399e2598f8b63f81ac77ff5c63248b7656779bff1632d7d3d"
+checksum = "2e57e16b3fe8ff4364c0661fdaac543fb38b29ea9bc9c2f45612d90adf931d2b"
 dependencies = [
  "hashbrown",
  "ttf-parser",
@@ -186,16 +177,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ce5d3ddc6d3fa000eb1536d85e147bfe31aacaba692ed6a876f95cb7c855be78"
 
 [[package]]
-name = "libm"
-version = "0.2.16"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981"
-
-[[package]]
 name = "macroquad"
-version = "0.4.16"
+version = "0.4.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1cbd54d99d4d3ac59deed7ee4927bbbf4eb33a55635530af3be9395a55746090"
+checksum = "d2befbae373456143ef55aa93a73594d080adfb111dc32ec96a1123a3e4ff4ae"
 dependencies = [
  "fontdue",
  "glam",
@@ -222,9 +207,9 @@ dependencies = [
 
 [[package]]
 name = "miniquad"
-version = "0.4.11"
+version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dcbaea978d741f3b60ced666b06a2a1e4a2bc81cb8b9dd29f4a40965e1f59e65"
+checksum = "2fb3e758e46dbc45716a8a49ca9edc54b15bcca826277e80b1f690708f67f9e3"
 dependencies = [
  "libc",
  "ndk-sys",
@@ -322,12 +307,9 @@ checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
 
 [[package]]
 name = "ttf-parser"
-version = "0.25.1"
+version = "0.21.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2df906b07856748fa3f6e0ad0cbaa047052d4a7dd609e231c4f72cee8c36f31"
-dependencies = [
- "core_maths",
-]
+checksum = "2c591d83f69777866b9126b24c6dd9a18351f177e49d625920d19f989fd31cf8"
 
 [[package]]
 name = "winapi"
