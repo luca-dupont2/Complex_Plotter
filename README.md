@@ -68,10 +68,24 @@ The bundle will be located in:
 ## Customizing the function
 
 The complex function being visualized can be modified directly in the source code.  
-See ```main.rs``` line 30, ```fn f(z : Complex<f32>) -> Complex<f32>```.
+See `src/main.rs`, `fn f(z: Complex<f32>) -> Complex<f32>`.
 
 This design choice keeps the renderer simple while allowing full mathematical
 flexibility.
+
+The default function is `(z³ - 100) / (z² + 40)`. To plot Riemann zeta,
+replace the active expression in `f` with its commented zeta example.
+Zeta is implemented in `src/zeta.rs` with `f64` arithmetic. It sums at least 200 terms and adds 12
+[Euler–Maclaurin tail corrections](https://dlmf.nist.gov/25.11#iii).
+For real parts below -0.5, it uses the
+[functional equation](https://dlmf.nist.gov/25.4#E2) for analytic continuation.
+The evaluator handles the trivial zeros and represents the pole at `z = 1`
+as infinity. Larger inputs increase the number of terms. Nonfinite inputs and
+inputs with `|z| > 10,000` return NaN to bound computation per pixel.
+
+This is a plotting approximation without a certified error bound. The plotter
+converts results to `f32` for rendering, so large values can overflow and small
+values near zeros can lose precision.
 
 ---
 

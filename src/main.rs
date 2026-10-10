@@ -3,9 +3,8 @@ use macroquad::{color::hsl_to_rgb, miniquad::window::screen_size, prelude::*};
 use num_complex::Complex;
 use std::f32::consts::PI;
 mod cache;
+mod zeta;
 use cache::{Cache, View};
-
-// ! Change function at line 30
 
 // Constants
 const ZOOM_FACTOR: f32 = 1.1;
@@ -17,7 +16,6 @@ const SATURATION: f32 = 1.;
 const START_BOUNDARIES: f32 = 10.;
 const NUM_DIVISIONS : i32 = 4;
 const TRANSPARENT_GREY: Color = Color{r : 220., g : 220., b : 220., a : 0.2};
-const ZERO_THRESHOLD : f32 = 0.1e-30;
 
 // Map value from one range to another function that will be used a lot
 fn map_value(value: f32, from_min: f32, from_max: f32, to_min: f32, to_max: f32) -> f32 {
@@ -35,20 +33,9 @@ fn f(z : Complex<f32>) -> Complex<f32> {
     // z / z.cos()
     // z.sin() - 0.5
 
-    // ↓↓↓ SLOW Riemann zeta function ↓↓↓ (Tip : If you really want to use it, make the screen small, so it runs at a reasonable speed)
-    /*
-    let mut res = Complex::new(0., 0.);
-
-    for i in 1..100 {
-        let exp_z = z.expf(i as f32);
-        if exp_z.re.abs() < ZERO_THRESHOLD && exp_z.im.abs() < ZERO_THRESHOLD {
-            return Complex::new(exp_z.re.signum()*INF,exp_z.im.signum()*INF)
-        } else if exp_z.is_finite() {
-            res += exp_z.inv();
-        }
-    }
-    res
-*/
+    // Riemann zeta:
+    // let value = zeta::zeta(Complex::new(z.re as f64, z.im as f64));
+    // Complex::new(value.re as f32, value.im as f32)
 }
 
 // Map a point value to a color
