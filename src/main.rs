@@ -7,8 +7,9 @@ mod zeta;
 use cache::{Cache, View};
 
 // Constants
-const ZOOM_FACTOR: f32 = 1.1;
-const SCROLL_FACTOR: f32 = 50.;
+const ZOOM_SPEED: f32 = std::f32::consts::LN_2; // 2× per second
+const PAN_SPEED: f32 = 1.; // Half the viewport width per second
+const MAX_INPUT_DT: f32 = 0.25; // Avoid jumps after a pause or long render
 const INF : f32 = f32::INFINITY;
 const K: i32 = 2;
 const MAX_LIGHTNESS: f32 = 0.7;
@@ -83,31 +84,25 @@ async fn main() {
 
         clear_background(BLACK);
 
-        // Handle key presses
-        if is_key_down(KeyCode::Equal) {
-            // Zoom in
-            boundary /= ZOOM_FACTOR;
-        }
-        if is_key_down(KeyCode::Minus) {
-            // Zoom out
-            boundary *= ZOOM_FACTOR;
-        }
-        if is_key_down(KeyCode::Right) {
-            // Scroll right
-            x_offset += boundary / SCROLL_FACTOR;
-        }
-        if is_key_down(KeyCode::Left) {
-            // Scroll left
-            x_offset -= boundary / SCROLL_FACTOR;
-        }
-        if is_key_down(KeyCode::Down) {
-            // Scroll down
-            y_offset += boundary / SCROLL_FACTOR;
-        }
-        if is_key_down(KeyCode::Up) {
-            // Scroll up
-            y_offset -= boundary / SCROLL_FACTOR;
-        }
+        // Rates use elapsed time, so rendering speed does not set movement speed.
+        let dt = get_frame_time().min(MAX_INPUT_DT);
+        let zoom = is_key_down(KeyCode::Minus) as i32 - is_key_down(KeyCode::Equal) as i32;
+        let zoom_rate = zoom as f32 * ZOOM_SPEED;
+        // Integrate the changing scale when panning and zooming together.
+        let pan_distance = if zoom == 0 {
+            boundary * dt
+        } else {
+            boundary * (zoom_rate * dt).exp_m1() / zoom_rate
+        };
+        boundary *= (zoom_rate * dt).exp();
+
+        let direction = vec2(
+            (is_key_down(KeyCode::Right) as i32 - is_key_down(KeyCode::Left) as i32) as f32,
+            (is_key_down(KeyCode::Down) as i32 - is_key_down(KeyCode::Up) as i32) as f32,
+        ).normalize_or_zero();
+        let movement = direction * (pan_distance * PAN_SPEED);
+        x_offset += movement.x;
+        y_offset += movement.y;
 
         let view = View { width: w, height: h, boundary: boundary as f64, x: x_offset as f64, y: y_offset as f64 };
         if cache.update(view, |x, y| f(Complex::new(x as f32, y as f32))) {
