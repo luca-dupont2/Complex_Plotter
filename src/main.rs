@@ -71,6 +71,7 @@ async fn main() {
     // Graph translation offsets
     let mut x_offset = 0.;
     let mut y_offset = 0.;
+    let mut last_scroll_time = get_time();
 
     loop {
         // Check for window resizing
@@ -103,6 +104,27 @@ async fn main() {
         let movement = direction * (pan_distance * PAN_SPEED);
         x_offset += movement.x;
         y_offset += movement.y;
+
+        // Drag the plot with the left mouse button.
+        if is_mouse_button_down(MouseButton::Left) && !is_mouse_button_pressed(MouseButton::Left) {
+            let delta = mouse_delta_position() * boundary;
+            x_offset += delta.x;
+            y_offset += delta.y;
+        }
+
+        // Scroll to zoom, keeping the point under the cursor fixed.
+        let scroll = mouse_wheel().1;
+        if scroll != 0. {
+            // Cap fast scrolling at 16× zoom per second.
+            let now = get_time();
+            let max_step = 4. * ZOOM_SPEED * (now - last_scroll_time).min(0.1) as f32;
+            last_scroll_time = now;
+            let new_boundary = boundary * (-scroll * 0.01).clamp(-max_step, max_step).exp();
+            let anchor = mouse_position_local() * (boundary - new_boundary);
+            x_offset += anchor.x;
+            y_offset += anchor.y;
+            boundary = new_boundary;
+        }
 
         let view = View { width: w, height: h, boundary: boundary as f64, x: x_offset as f64, y: y_offset as f64 };
         if cache.update(view, |x, y| f(Complex::new(x as f32, y as f32))) {
